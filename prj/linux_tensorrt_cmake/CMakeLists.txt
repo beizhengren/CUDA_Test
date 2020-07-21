@@ -2,12 +2,12 @@
 # CMake file for TensorRt_Test
 
 # 设定依赖的CMake版本
-CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.3.13)
 # 指定项目名称
 PROJECT(TensorRT_Test)
 
 # 搜索指定的OpenCV外部依赖库头文件和库文件位置
-FIND_PACKAGE(OpenCV 2)
+FIND_PACKAGE(OpenCV 3.3.1)
 # 搜索指定的CUDA外部依赖库头文件和库文件位置
 FIND_PACKAGE(CUDA)
 
@@ -30,7 +30,7 @@ SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu++0x")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++0x")
 
 # 指定CUDA头文件的搜索路径
-INCLUDE_DIRECTORIES(/usr/local/cuda-8.0/include)
+INCLUDE_DIRECTORIES(/usr/local/cuda-10.0/include)
 # 指定TensorRT头文件的搜索路径
 INCLUDE_DIRECTORIES(/usr/local/tensorrt/tensorrt2.1_v6.0/include)
 # 指定cudnn头文件的搜索路径
@@ -44,7 +44,7 @@ LINK_DIRECTORIES(/usr/local/tensorrt/tensorrt2.1_v6.0/lib)
 # 指定cudnn动态库搜索路径
 LINK_DIRECTORIES(/usr/local/cudnn/cudnn8.0_v6.0/lib64)
 # 指定cuda动态库搜索路径
-LINK_DIRECTORIES(/usr/local/cuda-8.0/lib64)
+LINK_DIRECTORIES(/usr/local/cuda-10.0/lib64)
 
 # 使CUDA NVCC 编译器支持C++11特性
 LIST(APPEND CUDA_NVCC_FLAGS -std=c++11;-O2)
@@ -54,6 +54,7 @@ SET(CUDA_PROPAGATE_HOST_FLAGS OFF)
 
 LIST(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_50,code=sm_50)
 LIST(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_60,code=sm_60)
+LIST(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_61,code=sm_61)
 
 # 编译可执行程序，即生成可执行文件TensorRT_Test
 #ADD_EXECUTABLE(TensorRT_Test ${CPP_LIST} ${CU_LIST}) # 不包括编译*.cu文件，需要使用CUDA_ADD_EXECUTABLE命令
@@ -61,5 +62,10 @@ CUDA_ADD_EXECUTABLE(TensorRT_Test ${CPP_LIST} ${CU_LIST})
 # 用来为target添加需要链接的共享库，指定工程所用的依赖库，包括动态库和静态库
 TARGET_LINK_LIBRARIES(TensorRT_Test ${OpenCV_LIBS} nvcaffe_parser nvinfer cudnn cublas)
 #MESSAGE(STATUS "opencv libs: ${OpenCV_LIBS}")
+
+SET(FolderList ../../test_data/models ../../test_data/images)
+foreach(FolderIter ${FolderList})
+    FILE(COPY ${FolderIter} DESTINATION ${CMAKE_BINARY_DIR}/linux_tensorrt_cmake)
+endforeach()
 
 MESSAGE(STATUS "**************************************")

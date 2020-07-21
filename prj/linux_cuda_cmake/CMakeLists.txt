@@ -7,7 +7,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
 PROJECT(CUDA_Test)
 
 # 搜索指定的OpenCV外部依赖库头文件和库文件位置
-FIND_PACKAGE(OpenCV 2)
+FIND_PACKAGE(OpenCV 3.3.1)
 # 搜索指定的CUDA外部依赖库头文件和库文件位置
 FIND_PACKAGE(CUDA)
 
@@ -30,7 +30,7 @@ SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu++0x")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++0x")
 
 # 指定CUDA头文件的搜索路径
-INCLUDE_DIRECTORIES(/usr/local/cuda-8.0/include)
+INCLUDE_DIRECTORIES(/usr/local/cuda-10.0/include)
 # 指定OpenCV头文件搜索路径
 INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
 #MESSAGE(STATUS "opencv include directory: ${OpenCV_INCLUDE_DIRS}")
@@ -43,6 +43,7 @@ SET(CUDA_PROPAGATE_HOST_FLAGS OFF)
 
 LIST(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_50,code=sm_50)
 LIST(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_60,code=sm_60)
+LIST(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_61,code=sm_61)
 
 # 编译可执行程序，即生成可执行文件CUDA_Test
 #ADD_EXECUTABLE(CUDA_Test ${CPP_LIST} ${CU_LIST}) # 不包括编译*.cu文件，需要使用CUDA_ADD_EXECUTABLE命令
